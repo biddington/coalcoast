@@ -1,0 +1,86 @@
+---
+import { ViewTransitions } from "astro:transitions";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Computer Club</title>
+    <ViewTransitions />
+    <style>
+      @font-face {
+        font-family: "Recursive";
+        src: url("/fonts/Recursive.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      html {
+        padding: 10px;
+        font-family: Recursive;
+      }
+
+      .main {
+        width: 680px;
+        margin: 0 auto;
+      }
+
+      hr {
+        width: 100%;
+        border: none;
+        border-bottom: 3px solid oklch(31% 0.015 285);
+        flex: none;
+      }
+
+      .header {
+        /* text */
+        font-variation-settings:
+          "MONO" 1,
+          "CASL" 0,
+          "CRSV" 0;
+        font-weight: 720;
+        font-size: 35px;
+        text-transform: uppercase;
+
+        /* layout */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 100px;
+      }
+
+      .coal-coast {
+        width: 4ch;
+        line-height: 0.85;
+        margin-top: 20px;
+        z-index: 1;
+      }
+
+      .computer-club {
+        width: 8ch;
+        line-height: 0.85;
+        margin-top: 20px;
+        text-indent: -1ch;
+        z-index: 1;
+      }
+
+      #logo {
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="header">
+        <div class="coal-coast">coal coast</div>
+        <img id="logo" src="computerclub.png" alt="computer club logo" />
+        <div class="computer-club">computer club.</div>
+      </div>
+      <div transition:name="text" transition:animate="slide">
+        <slot />
+      </div>
+    </div>
+  </body>
+</html>

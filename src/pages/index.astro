@@ -1,43 +1,6 @@
 ---
+import BaseLayout from "../layouts/base.astro";
+const { title } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>©©©©</title>
-		<style>
-			html {
-				background-color: oklch(31% 0.015 285);
-				padding: 40px;
-			}
-
-			body {
-				display: flex;
-				justify-content: center;
-
-			}
-
-			.main {
-				display: flex;
-				justify-content: center;
-				flex-wrap: wrap;
-				width: 680px;
-			}
-
-			hr {
-				width: 100%;
-				border: none;
-				border-bottom: 3px solid oklch(31% 0.015 285);
-				flex: none;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="main">
-			<img src="TypeLogo.svg" alt="">
-		</div>
-	</body>
-</html>
+<BaseLayout />
