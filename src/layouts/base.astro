@@ -1,5 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import '@fontsource/recursive/400.css';
+import '@fontsource/recursive/700.css';
 ---
 
 <html lang="en">
@@ -11,15 +13,12 @@ import { ViewTransitions } from "astro:transitions";
     <title>Computer Club</title>
     <ViewTransitions />
     <style>
-      @font-face {
-        font-family: "Recursive";
-        src: url("/fonts/Recursive.ttf") format("truetype");
-        font-display: swap;
-      }
-
       html {
         padding: 10px;
-        font-family: Recursive;
+      }
+
+      body {
+          font-family: 'Recursive', sans-serif;
       }
 
       .main {
@@ -36,11 +35,7 @@ import { ViewTransitions } from "astro:transitions";
 
       .header {
         /* text */
-        font-variation-settings:
-          "MONO" 1,
-          "CASL" 0,
-          "CRSV" 0;
-        font-weight: 720;
+        font-weight: 700;
         font-size: 35px;
         text-transform: uppercase;
 
