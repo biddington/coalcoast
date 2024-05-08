@@ -1,7 +1,10 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import '@fontsource/recursive/400.css';
-import '@fontsource/recursive/700.css';
+import "@fontsource/recursive/300.css";
+import "@fontsource/recursive/400.css";
+import "@fontsource/recursive/500.css";
+import "@fontsource/recursive/600.css";
+import "@fontsource/recursive/700.css";
 ---
 
 <html lang="en">
@@ -13,67 +16,70 @@ import '@fontsource/recursive/700.css';
     <title>Computer Club</title>
     <ViewTransitions />
     <style>
+
       html {
-        padding: 10px;
+        padding-top: 30px;
       }
 
       body {
-          font-family: 'Recursive', sans-serif;
+        font-family: "Recursive", sans-serif;
+        line-height: 1.6;
+        p {
+          font-weight: 300;
+        }
       }
 
       .main {
         width: 680px;
         margin: 0 auto;
-      }
 
-      hr {
-        width: 100%;
-        border: none;
-        border-bottom: 3px solid oklch(31% 0.015 285);
-        flex: none;
+        h3 {
+          color: black;
+          text-transform: uppercase;
+          letter-spacing: .025em;
+        }
+
+        h4 {
+          font-weight: 400;
+          margin-top: 1.5rem;
+          margin-bottom: .25rem;
+        }
+
+        h4 + p {
+          margin-top: 0;
+        }
+
+        :link, a, a:visited {
+          color: oklch(60.4% 0.083 26.8);
+        }
       }
 
       .header {
-        /* text */
-        font-weight: 700;
-        font-size: 35px;
-        text-transform: uppercase;
-
-        /* layout */
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        gap: 20px;
         align-items: center;
         margin-bottom: 100px;
       }
 
-      .coal-coast {
-        width: 4ch;
-        line-height: 0.85;
-        margin-top: 20px;
-        z-index: 1;
-      }
-
-      .computer-club {
-        width: 8ch;
-        line-height: 0.85;
-        margin-top: 20px;
-        text-indent: -1ch;
-        z-index: 1;
-      }
-
       #logo {
-        width: 200px;
+        width: 299px;
       }
+
+      #title {
+        width: 170px;
+      }
+
     </style>
   </head>
   <body>
     <div class="main">
       <div class="header">
-        <div class="coal-coast">coal coast</div>
         <img id="logo" src="computerclub.png" alt="computer club logo" />
-        <div class="computer-club">computer club.</div>
+        <img id="title" src="computerclubtitle.svg" alt="coal coast computer club" />
       </div>
-      <div transition:name="text" transition:animate="slide">
+      <div class="post" transition:name="text" transition:animate="slide">
         <slot />
       </div>
     </div>

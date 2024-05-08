@@ -1,0 +1,37 @@
+---
+const { word, type, definition } = Astro.props;
+---
+
+<style>
+
+  .background {
+    width: 85%;
+    margin: 30px auto;
+    /* border-radius: 10px; */
+    padding: 4px 14px;
+    border-left: 3px solid
+  }
+
+  .word {
+    font-weight: 500;
+  }
+
+  .type {
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  .definition {
+    font-weight: 300;
+    font-size: 14px;
+  }
+</style>
+
+<div class="background">
+  <div style={{ display: "flex", gap: "5px" }}>
+    <div class="word">{word}</div><div class="type">{type}</div>
+  </div>
+  <div class="definition">
+    {definition}
+  </div>
+</div>

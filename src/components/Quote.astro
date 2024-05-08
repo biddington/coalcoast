@@ -1,0 +1,27 @@
+---
+const { source } = Astro.props
+---
+
+<style>
+  .quote {
+     width: 85%;
+     margin: 50px auto;
+  }
+
+  .quote-text {
+    font-size: 16px;
+  }
+
+  .quote-source {
+    text-align: right;
+    font-size: 14px;
+    font-weight: 500;
+  }
+</style>
+
+<div class="quote">
+  <div class="quote-text">
+    <slot/>
+  </div>
+  {source && <div class="quote-source"> – {source}</div>}
+</div>

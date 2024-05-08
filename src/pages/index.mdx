@@ -1,0 +1,64 @@
+---
+layout: "../layouts/base.astro"
+---
+
+import Definition from "../components/Definition.astro";
+
+### Cohesion
+
+Just what is cohesion? In software terms it's routinely defined as "how well the elements of a module (think function, class or namespace for example) _go_ together". A quick look at a dictionary gives
+
+<Definition
+  word="cohesion"
+  type="noun"
+  definition="The action or fact of forming a united whole" />
+
+Though I find _cohere_ to be a more helpful word. It's definition is
+
+  <Definition
+    word="cohere"
+    type="verb"
+    definition="(of an argument or theory) be logically consistent" />
+
+Using the definition of cohere, the software-flavoured version of cohesion could be expressed as "the degree to which elements of a module are logically consistent". But why is this important?
+
+#### Cognitive load
+As far as I can tell it comes down to comprehension. A function who's elements and logic are soley oriented toward the functions spec will be easier to comprehend than a function whos elements and logic represent a multitude of concerns, because as well as trying to comprehend the spec for the flow through the function you're interested in you also have to identify and ignore any irrelevent elements which obviously requires more effort.
+
+Another more subtle quality of cohesion refers to the level of detail for each element. While a function may be cohesive in that every element contributes to the stated spec, those elements might not all be represented at the same level of abstraction. For example
+
+```js
+function processNewUserRegistration(userData) {
+    // High-level abstraction: 'Valid' is a reasonable thing
+    if (ensureValidUser(user) {
+        throw new Error("Bad user registration data");
+    }
+
+    // Low-level abstraction: Directly interacting with database
+    const config = {
+        user: 'yourUsername',
+        password: 'yourPassword',
+        server: 'yourServer',
+        database: 'yourDatabaseName'
+    };
+
+    // Open connection to the db
+    await sql.connect(config);
+
+    // Query to insert data
+    const result = await sql.query`INSERT INTO Users (Name, Email) VALUES (${userData.name}, ${userData.email})`;
+
+    sendWelcomeEmail(userData.email);
+
+    // Low-level abstraction: Logging directly to console
+    console.log(`User registered with ID: ${userId}`);
+
+    // High-level abstraction: Returning a user object
+    return {
+        userId: userId,
+        status: 'registered'
+    };
+}
+```
+
+Here we're validating user data, interacting with a database, logging to a console and sending a welcome email. All elements are necessary by reason of the funciton but clearly not all are at the same level of abstraction - inserting a value into a database does not require the same domain understanding, logic or reason required to evaluate what a "valid" user is. The up-and-down of detail in this example may be trivial to navigate but on a larger, more complex module it has a compounding effect. As an aside, what we've identified here is referred to as essential and accidental complexity; the elements that pertain to the problem domain and the elements that pertain to the solution domain.
