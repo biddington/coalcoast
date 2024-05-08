@@ -27,7 +27,7 @@ As far as I can tell it comes down to comprehension. A function who's elements a
 
 Another more subtle quality of cohesion refers to the level of detail for each element. While a function may be cohesive in that every element contributes to the stated spec, those elements might not all be represented at the same level of abstraction. For example
 
-```js
+```js frame="terminal"
 function processNewUserRegistration(userData) {
     // High-level abstraction: 'Valid' is a reasonable thing
     if (ensureValidUser(user) {
@@ -61,4 +61,8 @@ function processNewUserRegistration(userData) {
 }
 ```
 
-Here we're validating user data, interacting with a database, logging to a console and sending a welcome email. All elements are necessary by reason of the funciton but clearly not all are at the same level of abstraction - inserting a value into a database does not require the same domain understanding, logic or reason required to evaluate what a "valid" user is. The up-and-down of detail in this example may be trivial to navigate but on a larger, more complex module it has a compounding effect. As an aside, what we've identified here is referred to as essential and accidental complexity; the elements that pertain to the problem domain and the elements that pertain to the solution domain.
+Here we're validating user data, interacting with a database, logging to a console and sending a welcome email. All elements are necessary by reason of the function but clearly not all are at the same level of abstraction - inserting a value into a database does not require the same domain understanding, logic or reason required to evaluate what a "valid" user is. The up-and-down of detail in this example may be trivial to navigate but on a larger, more complex module it has a compounding effect. As an aside, what we've identified here is referred to as essential and incidental complexity; elements that pertain to the problem domain versus those that pertain to the solution domain.
+
+As one improvement, the lower level incidental concerns of connecting to a database could expressed as a function call to persist the data, eliding the actual details of how thats done and better expressing the intent of our design that we want to persist the data; using a SQL database is just one way we could achieve that, we could also write it to a file, cache it in RAM or use a an external service via an HTTP API. The point being by expressing the all the elements at a level close to that of the function interface we make comprehension easier and less taxing.
+
+In the end cohesion is about designing our modules such that we maximise the coherence of the elements within, both _what's_ in there and _how_ it's in there i.e. it's level of detail. In this way we make our system simpler and easier to reason about.
