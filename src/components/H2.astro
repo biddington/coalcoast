@@ -1,0 +1,12 @@
+---
+const props = Astro.props;
+---
+<style>
+
+</style>
+<h2 {...props} style={{ marginBottom: '50px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+  <slot />
+  <hr style={{ height: 0, border: 'none', borderBottom: '3px solid black', flex: '1 1 100px', marginLeft: '20px' }}/>
+  </div>
+</h2>

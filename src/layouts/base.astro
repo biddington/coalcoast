@@ -1,10 +1,9 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import "@fontsource/recursive/300.css";
-import "@fontsource/recursive/400.css";
 import "@fontsource/recursive/500.css";
-import "@fontsource/recursive/600.css";
-import "@fontsource/recursive/700.css";
+import "@fontsource/inter/300.css";
+import "@fontsource/inter/600.css";
 ---
 
 <html lang="en">
@@ -16,41 +15,53 @@ import "@fontsource/recursive/700.css";
     <title>Computer Club</title>
     <ViewTransitions />
     <style>
-
       html {
-        padding-top: 30px;
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          font-family: "Recursive", sans-serif;
+          text-transform: uppercase;
+        }
       }
 
       body {
-        font-family: "Recursive", sans-serif;
+        margin: 0;
+        font-family: "Inter", sans-serif;
         line-height: 1.6;
+
         p {
           font-weight: 300;
         }
       }
 
       .main {
-        width: 680px;
+        width: max-content;
         margin: 0 auto;
+        border-left: 1px solid #0f0f0f12;
+        border-right: 1px solid #0f0f0f12;
+        padding-bottom: 100px;
+
+        h2 {
+          font-size: 22px;
+        }
 
         h3 {
+          font-weight: 700;
           color: black;
-          text-transform: uppercase;
-          letter-spacing: .025em;
+          letter-spacing: 0.025em;
         }
 
         h4 {
-          font-weight: 400;
-          margin-top: 1.5rem;
-          margin-bottom: .25rem;
+          font-weight: 600;
+          margin-top: 3rem;
+          margin-bottom: 0.5rem;
         }
 
         h4 + p {
           margin-top: 0;
-        }
-
-        :link, a, a:visited {
-          color: oklch(60.4% 0.083 26.8);
         }
       }
 
@@ -60,15 +71,36 @@ import "@fontsource/recursive/700.css";
         justify-content: center;
         gap: 20px;
         align-items: center;
-        margin-bottom: 100px;
+        padding: 10px;
       }
 
       #logo {
-        width: 299px;
+        width: 110px;
       }
 
       #title {
-        width: 170px;
+        display: none;
+        position: absolute;
+        width: 350px;
+      }
+
+      .post {
+        width: 747px;
+        margin-top: 70px;
+        margin-left: 70px;
+        margin-right: 70px;
+      }
+
+      hr {
+        border: none;
+        border-bottom: 1px solid #0f0f0f12;
+      }
+
+      hr.finbar {
+        width: 70px;
+        margin: 0 auto;
+        margin-top: 50px;
+        border-bottom: 3px solid black;
       }
 
     </style>
@@ -77,10 +109,16 @@ import "@fontsource/recursive/700.css";
     <div class="main">
       <div class="header">
         <img id="logo" src="computerclub.png" alt="computer club logo" />
-        <img id="title" src="computerclubtitle.svg" alt="coal coast computer club" />
+        <img
+          id="title"
+          src="computerclubtitle.svg"
+          alt="coal coast computer club"
+        />
       </div>
+      <hr />
       <div class="post" transition:name="text" transition:animate="slide">
         <slot />
+        <hr class="finbar" />
       </div>
     </div>
   </body>

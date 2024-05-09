@@ -3,29 +3,51 @@ layout: "../layouts/base.astro"
 ---
 
 import Definition from "../components/Definition.astro";
+import Quote from "../components/Quote.astro";
+import H2 from '../components/H2.astro';
+export const components = { h2: H2 }
 
-### Cohesion
+## Cohesion! Wait, what?
+Cohesion, normally mentioned along with coupling, is a term used to characterise a module, specifically, "how _well_ the elements of a module (think function, class or namespace for example) go together" where "element" refers to –
 
-Just what is cohesion? In software terms it's routinely defined as "how well the elements of a module (think function, class or namespace for example) _go_ together". A quick look at a dictionary gives
+<Quote source="Structured Design">
+a "piece" of the module, such as a statement, a segment, or a "subfunction"
+</Quote>
+
+Unlike coupling it's a little harder to explain due to I think, it not being a concept representable via programming language constructs as coupling is.
+
+As a Rich Hickey fan, I'll also begin with some dictionary defintions -
 
 <Definition
   word="cohesion"
   type="noun"
   definition="The action or fact of forming a united whole" />
 
-Though I find _cohere_ to be a more helpful word. It's definition is
+<Definition
+  word="cohere"
+  type="verb"
+  definition="(of an argument or theory) be logically consistent" />
 
-  <Definition
-    word="cohere"
-    type="verb"
-    definition="(of an argument or theory) be logically consistent" />
+I think the definition of **cohere** captures the idea better than cohesion itself. In light of this, the definition could be tweaked a little: "the degree to which elements of a module are logically consistent". But why is this important?
 
-Using the definition of cohere, the software-flavoured version of cohesion could be expressed as "the degree to which elements of a module are logically consistent". But why is this important?
+#### Comprehension, implementation and change
+Increasing the cohesion of a system and its module(s) necessarily coalesces related elements of different modules and expells unrelated elements of the same module which both increases cohesion and reduces coupling of the system. A function who's elements and logic are soley oriented toward the functions spec will be easier to comprehend than a function whose elements and logic represent a multitude of concerns because as well as trying to comprehend the spec for the flow through the function you're interested in you're also having to identify and ignore any irrelevent elements which obviously requires more effort. At the same time, reduced coupling means we practically spend less effort comprehending a certain domain concept for instance, because it's not spread over many modules.
 
-#### Cognitive load
-As far as I can tell it comes down to comprehension. A function who's elements and logic are soley oriented toward the functions spec will be easier to comprehend than a function whos elements and logic represent a multitude of concerns, because as well as trying to comprehend the spec for the flow through the function you're interested in you also have to identify and ignore any irrelevent elements which obviously requires more effort.
+Traditionally there are six levels of cohesion, where coincidental is the weakest and functional the higheset i.e. most desirable:
 
-Another more subtle quality of cohesion refers to the level of detail for each element. While a function may be cohesive in that every element contributes to the stated spec, those elements might not all be represented at the same level of abstraction. For example
+1. Coincidental
+2. Logical
+3. Temporal
+4. Communicational
+5. Sequential
+6. Functional
+
+Coincidental cohesion describes modules whose elements have no meaningful relationship - think those "utils" or "helper" files; or perhaps a module that consolidates duplicate code. Functional cohesion on the other hand, represents modules with elements that are each "related to the performance of a single function" (Structured Design)
+
+Interestingly these categories aren't exclusive and a module may exhibit several at once, but being characterised by the highest available.
+
+#### Level of detail
+Lastly, a less mentioned subtle quality of cohesion refers to the "level of detail" for each element. While a function may be cohesive in the sense that every element contributes to the stated spec, those elements might not all be represented at the same level of abstraction. For example
 
 ```js frame="terminal"
 function processNewUserRegistration(userData) {
@@ -46,7 +68,7 @@ function processNewUserRegistration(userData) {
     await sql.connect(config);
 
     // Query to insert data
-    const result = await sql.query`INSERT INTO Users (Name, Email) VALUES (${userData.name}, ${userData.email})`;
+    const result = await sql.query`${QUERY}(${userData.name}, ${userData.email})`;
 
     sendWelcomeEmail(userData.email);
 
@@ -61,7 +83,10 @@ function processNewUserRegistration(userData) {
 }
 ```
 
-Here we're validating user data, interacting with a database, logging to a console and sending a welcome email. All elements are necessary by reason of the function but clearly not all are at the same level of abstraction - inserting a value into a database does not require the same domain understanding, logic or reason required to evaluate what a "valid" user is. The up-and-down of detail in this example may be trivial to navigate but on a larger, more complex module it has a compounding effect. As an aside, what we've identified here is referred to as essential and incidental complexity; elements that pertain to the problem domain versus those that pertain to the solution domain.
+Here we're validating user data, interacting with a database, logging to a console and sending a welcome email. All elements are necessary by reason of the function but clearly not all are at the same level of abstraction - inserting a value into a database does not require the same domain understanding, logic or reason required to evaluate what a "valid" user is. The up-and-down of detail in this example may be trivial to navigate but on a larger, more complex module it has a compounding effect.
+
+#### Incidental complexity
+As an aside, what we've identified here is referred to as essential and incidental complexity; elements that pertain to the problem domain versus those that pertain to the solution domain.
 
 As one improvement, the lower level incidental concerns of connecting to a database could expressed as a function call to persist the data, eliding the actual details of how thats done and better expressing the intent of our design that we want to persist the data; using a SQL database is just one way we could achieve that, we could also write it to a file, cache it in RAM or use a an external service via an HTTP API. The point being by expressing the all the elements at a level close to that of the function interface we make comprehension easier and less taxing.
 
