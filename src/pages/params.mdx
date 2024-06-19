@@ -1,0 +1,72 @@
+---
+layout: "../layouts/base.astro"
+tags: ['React', 'Design']
+---
+
+import H2 from '../components/H2.astro';
+export const components = { h2: H2 }
+
+### React Component API Design
+
+When defining component interfaces is it better to specify dependencies as granular and low-level as we can, or should we prefer to use higher level concepts? What are the trade-offs of each and what should we be thinking about when designing our component interfaces?
+
+#### Spec
+Say we're working on a UI and our domain is that of a postal service. We have core concepts such as "routes" and "addresses". In particular we're creating a list screen and we've chosen to represent the routes and addresses as a heirarchy emphasising a "folder" analogy where each route contains a number of addresses.
+
+Further, we would like to differentiate routes with icons based on certain route properties. In particular we want to differentiate routes based on their `inactive` state and the various `priority` levels.
+
+Two ways of expressing such a spec in a function component could be (examples in React) –
+
+```tsx
+// props are derived from `PostalRoute` but this link is expressly coincidental
+function RouteIcon({
+  name,
+  description,
+  inactive,
+  priority
+}:{
+  name: string
+  description: string
+  inactive: boolean
+  priority: "normal" | "level-1" | "level-2"
+}) : React.ReactElement
+
+
+// props are expressed as the `PostalRoute` type
+function RouteIcon({ route }: { route: PostalRoute }): React.ReactElement
+
+// Where `PostalRoute` is defined somewhere else as
+type PostalRoute = {
+   id: string
+   name: string
+   description: string
+   inactive: boolean
+   priority: "normal" | "level-1" | "level-2"
+}
+```
+
+The first component function expresses its dependencies as explicitly as possible – each prop corresponds to a piece of data from `PostalRoute`. A benefit of this approach is that there's no wastage; we know exactly what we need do produce an icon and we project precisely that through the API, no more, no less. It also implies reuse, that is, whereever we have these properties we can plug them in to this function and get out an icon. A downside is that whenever the props change (either our implementation changes and consequently our interface too, or used props from `PostalRoute` are removed) then all usages need to be changed.
+
+The second component function has only one prop, a `PostalRoute` object. The benefit here is that our function API more accurately implements the spec; to take a `PostalRoute` and return some kind of React element. Another benefit is that in the event `PostalRoute` changes our function interface doesn't have to change, and consequently our usages don't need updating. A critique of this design is that our interface is now likely too "wide"; we could be passing in more data than we need as we're likely not utilising every property of `PostalRoute` when determining what icon to show. Also, because the type in the interface is more specific (remember we're using the `PostalRoute` type) it will not be as reusable as the first design because even though it's only got a single prop to fulfill, that prop is of higher particularity than the four primitives that make up the interface of the first design.
+
+So which is better? Is it better to itemise our data requirements as primitive as we can? Or does it not matter so much that we're not utilising every part of the `PostalRoute` type, and instead we should focus on the benefit of having a more descriptive interface by using a higher-level concept?
+
+What must be realised about the interface of the first function is that although the props are derived from `PostalRoute`, that information has been made non-obvious, if not lost completely; there's nothing in the type system enforcing the props to relate in any way i.e from _a_ `PostalRoute` object.
+
+```tsx
+/// Who says the props have to come from the same place? It's now only convention that recommends how to use the component. These can all be from different routes
+<Icon name={route1.name}
+      desc="Newman's Mail Route"
+      inactive={route2.inactive}
+      priority={route4.priority} />
+```
+
+The component interface is essentially a list of independent props. The two-edged sword is that with usage requirements weakened it's become applicable over a wider range of scenarios; as long as the correct props are supplied (i.e. they're merely of the right primitive type) this component can be used from other parts of the code that wish to utilise these icons - say a dashboard, settings page, or route details page. But that also means we could have nonsensical or even conflicting groups of props.
+
+Which the natural response to is, "I'll just add validation", which is why I prefer the interface of the second design.
+
+We may not do that in practice, but there's nothing in our implementation that stops us. Subtly, our implementation has diverged from the spec. Code is mostly about reading and comprehension. In order to maximise that we want to have our code track the spec as closely as possible.
+
+-- The "lower down" we go the less domain infused the components are; the more agnostic. They're concerned with implementation details which are by nature orthogonal to the business domain they're used in. Conversely the "higher up" you go the more infused the components are with domain concepts. Does that mean they're totally described in this language? Probably not. But you should be able to tell them apart from component primitives in that there's an obvious difference in the use/lack of domain language used to describe them
+
+(the difference between `PostalRoute` and an object of the same properties appears superficial. One is just a "named bag" or shape. However the intention is clearer, assuming we really want a `PostalRoute` and not just that particular collection of named types. If on the other hand we care about semantics then `PostalRoute` is superior. Not only that but the constructor function for `PostalRoute` could well enforce invariants that are not present in the type itself which would distinguish otherwise identical and valid representations of data)
